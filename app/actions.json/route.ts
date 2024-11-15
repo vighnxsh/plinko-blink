@@ -18,10 +18,24 @@ export const GET = async (req: NextRequest) => {
   };
 
   return new NextResponse(JSON.stringify(payload), {
-    headers: ACTIONS_CORS_HEADERS,
+    headers: {
+      ...ACTIONS_CORS_HEADERS,
+      'Access-Control-Allow-Origin': 'https://dial.to',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+    }
   });
 };
 
-// DO NOT FORGET TO INCLUDE THE `OPTIONS` HTTP METHOD
-// THIS WILL ENSURE CORS WORKS FOR BLINKS
-export const OPTIONS = GET;
+// Handle OPTIONS preflight requests
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 204,
+    headers: {
+      ...ACTIONS_CORS_HEADERS,
+      'Access-Control-Allow-Origin': 'https://dial.to',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS', 
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+    }
+  });
+}

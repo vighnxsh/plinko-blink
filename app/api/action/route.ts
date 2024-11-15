@@ -8,36 +8,39 @@ import {
     ActionPostRequest,
     ACTIONS_CORS_HEADERS,
   } from "@solana/actions";
-  import { Connection, PublicKey, SystemProgram, Transaction } from '@solana/web3.js';
+  import { Connection, PublicKey, SystemProgram, Transaction, Keypair } from '@solana/web3.js';
 
   const headers = createActionHeaders({
     chainId: "devnet",
     actionVersion: "2.2.1",
   });
 
+  // Initialize connection to devnet
+  const connection = new Connection("https://api.devnet.solana.com");
+
   export async function GET(request: NextRequest ) {
     try {
       const response: ActionGetResponse = {
-          icon: "https://example.com/plinko-icon.png",
+          icon: "https://utfs.io/f/fp4FPpzIq8tr36JrXH8vyrYH6V02JScIPMWOUltmgXNZv5Ki",
           title: "Plinko Game", 
-          description: "Play Plinko and win rewards!",
+          description: "Drop the ball and win rewards!!",
           label: "Play Plinko",
           links: {
               actions: [
                   {
                       type: "transaction",
                       label: "Play with 0.1 SOL",
-                      href: "/api/actions?amount=0.1"
+                      href: "/api/action?amount=0.1"
                   },
                   {
                       type: "transaction", 
                       label: "Play with 0.5 SOL",
-                      href: "/api/actions?amount=0.5"
+                      href: "/api/action?amount=0.5"
                   },
                   {
                       type: "transaction",
                       label: "Play with Custom Amount",
-                      href: "/api/actions?amount={amount}",
+                      href: "/api/action?amount={amount}",
                       parameters: [
                           {
                               name: "amount",
@@ -52,43 +55,6 @@ import {
       return NextResponse.json(response, { headers: ACTIONS_CORS_HEADERS });
     } catch (error) {
       console.error('Error in GET:', error);
-      return NextResponse.json({ error: 'Internal server error' }, { 
-        status: 500,
-        headers: ACTIONS_CORS_HEADERS 
-      });
-    }
-  }
-
-  export async function POST(request: NextRequest) {
-    try {
-      const body: ActionPostRequest<string> = await request.json();
-      //@ts-ignore
-      const { betAmount, startPosition } = body;
-
-      if (!betAmount || isNaN(parseFloat(betAmount))) {
-        return NextResponse.json({ error: "Invalid amount" }, { status: 400, headers });
-      }
-
-      // Call backend plinko game logic
-      const response = await fetch('http://localhost:3000/api/r', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ betAmount, startPosition })
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const result = await response.json();
-
-      return NextResponse.json(result, {
-        headers: ACTIONS_CORS_HEADERS
-      });
-    } catch (error) {
-      console.error('Error in POST:', error);
       return NextResponse.json({ error: 'Internal server error' }, { 
         status: 500,
         headers: ACTIONS_CORS_HEADERS 
