@@ -11,7 +11,6 @@ interface PlinkoResult {
 // Board configuration constants
 const ROWS = 16;            // Number of rows of pins
 const PINS_PER_ROW = 16;    // Number of pins per row
-const SLOT_COUNT = PINS_PER_ROW + 1;  // Number of landing slots
 
 // Multiplier values for each landing slot (17 slots total)
 // Adjusted multipliers to ensure house edge
